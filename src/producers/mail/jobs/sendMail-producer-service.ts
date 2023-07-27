@@ -1,13 +1,13 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
-import { CreateUserDTO } from 'src/controllers/create-user/create-user-dto';
+import { SendMailDTO } from 'src/controllers/send-email/send-mail-dto';
 
 @Injectable()
 export class SendMailProducerService {
   constructor(@InjectQueue('mail-queue') private mailQueue: Queue) {}
 
-  async sendMail(createUserDTO: CreateUserDTO) {
-    await this.mailQueue.add('mail-job', createUserDTO);
+  async sendMail(email: SendMailDTO) {
+    await this.mailQueue.add('mail-job', email);
   }
 }
