@@ -10,8 +10,19 @@ services:
       - simple-mail-network
     volumes: 
       - cache:/data
+  simple-mail:
+    image: simple-mail-ts
+    restart: always
+    ports:
+      - '3000:3000'
+    networks:
+      - simple-mail-network
+    volumes:
+      - simple-mail:/data
 volumes:
   cache:
+    driver: local
+  simple-mail:
     driver: local
 
 networks:
