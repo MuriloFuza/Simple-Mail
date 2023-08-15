@@ -38,7 +38,7 @@ import { BasicAuthMiddleware } from './middlewares/basic-auth-middleware';
           port: Number(process.env.SMTP_PORT),
         },
         template: {
-          dir: path.join(__dirname, '../templates/mail/'),
+          dir: path.join(__dirname, './templates/mail/'),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,

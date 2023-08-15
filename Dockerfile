@@ -1,13 +1,10 @@
-FROM node:18
+FROM node:18-alpine as base
 
 # Defina o diretório de trabalho no container
 WORKDIR /app
 
-# Copie o package.json e o package-lock.json para o container
-COPY package*.json ./
-
-# Copie o .env
-COPY .env ./
+# Copie o package.json para o container
+COPY package.json ./
 
 # Instale o PNPM
 RUN npm install -g pnpm
@@ -22,4 +19,4 @@ COPY . .
 RUN pnpm build
 
 # Comando para iniciar o aplicativo quando o container estiver em execução
-CMD ["pnpm", "start"]
+CMD ["pnpm", "start:prod"]

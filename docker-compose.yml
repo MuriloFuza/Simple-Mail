@@ -5,18 +5,15 @@ services:
     restart: always
     ports:
       - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-    networks:
-      - simple-mail-network
+    command: redis-server --save 20 1 --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     volumes: 
       - cache:/data
   simple-mail:
-    image: simple-mail-ts
+    build: .
     restart: always
     ports:
-      - '3000:3000'
-    networks:
-      - simple-mail-network
+      - '3002:3000'
+    env_file: .env
     volumes:
       - simple-mail:/data
 volumes:
@@ -24,7 +21,3 @@ volumes:
     driver: local
   simple-mail:
     driver: local
-
-networks:
-  simple-mail-network:
-    external: true

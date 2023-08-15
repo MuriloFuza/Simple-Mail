@@ -27,7 +27,7 @@ export class SendMailConsumer {
       to: data.to,
       from: data.from,
       subject: data.subject,
-      template: '../../templates/mail/main.hbs',
+      template: '../../../templates/mail/main.hbs',
       context: {
         name: data.context.name,
       },
