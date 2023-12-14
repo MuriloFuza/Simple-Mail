@@ -39,6 +39,7 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json .yarnrc.yml yarn.lock ./
+COPY nest-cli.json tsconfig.build.json tsconfig.json ./
 COPY ./src ./src
 
 RUN yarn build
