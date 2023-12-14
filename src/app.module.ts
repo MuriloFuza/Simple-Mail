@@ -9,7 +9,6 @@ import { MiddlewareBuilder } from '@nestjs/core';
 import { createBullBoard } from '@bull-board/api';
 import { SendEmailController } from './controllers/send-email/send-email.controller';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import * as path from 'path';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BasicAuthMiddleware } from './middlewares/basic-auth-middleware';
@@ -38,7 +37,7 @@ import { BasicAuthMiddleware } from './middlewares/basic-auth-middleware';
           port: Number(process.env.SMTP_PORT),
         },
         template: {
-          dir: path.join(__dirname, './templates/mail/'),
+          dir: '/templates',
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
