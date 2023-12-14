@@ -1,102 +1,63 @@
+# Simple Mail
 
-# Simple Mail Ts
+**Simple Mail** is a prebuilt application for mail sending, supporting multiple templates and variables.
 
-**Simple Mail Ts** is an editable microservice in nestJs where you can insert your handlebars template and send emails with queue control with support from Bull.
+## How to run
+We designed it to be user primarily with Docker, but it can, with some light code modification be ran bare.
 
-
-## Installation and Build
-
-The Installation process is simple. You need to fill in the data of your .env file in place of the .env.example, inserting your SMTP information (Compatibility with GMAIL and others), the access information of your redis container and also a configuration for your Bull dashboard.
-### Configurações de Templates e Contexto
-
-First of all, you need to modify your templates in the `Templates` folder.
-After modifying and adding your handlebars file, it's only necessary to modify the context being sent in `src/producers/mail/jobs/sendMail-consumer.ts` so that you can set the same for your handlebars file.
-
-Also remember to modify `src/controllers/send-email/send-mail-dto.ts` to type the necessary context.
-
-
-### Environment variables
-
-To run this project, you will need to add the following environment variables to your .env
-#### SMTP data
-
-`SMTP_USER`
-
-`SMTP_PASS`
-
-`SMTP_PORT`
-
-`SMTP_HOST`
-
-#### Data from Redis
-
-`REDIS_PASSWORD`
-
-`REDIS_PORT`
-
-`REDIS_HOST`
-
-#### Data for dashboard access
-
-`DASHBOARD_USERNAME`
-
-`DASHBOARD_PASSWORD`
-
-#### Docker compose configuration
-
-Below is an example configuration of docker-compose.yml, I recommend modifying the ports.
-
-```YML
+To run with Docker Compose:
+```yaml
 version: '3.8'
 services:
-  cache:
-    image: redis:6.2-alpine
-    restart: always
-    ports:
-      - '6379:6379'
-    command: redis-server --save 20 1 --requirepass your-pass-here
-    volumes: 
-      - cache:/data
-  simple-mail:
-    build: .
-    restart: always
+  mailer:
+    image: murilofuza/simple-mail
+    env_file: .env
+    depends_on:
+      - redis
     ports:
       - '3002:3000'
-    env_file: .env
     volumes:
-      - simple-mail:/data
-volumes:
-  cache:
-    driver: local
-  simple-mail:
-    driver: local
+      - /path/to/your/templates/folder:/templates
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis:/data
 ```
 
-### Build
+Be sure that your `.env` file has the needed variables:
+- `SMTP_HOST`: Your mailing server host
+- `SMTP_PORT`: Your mailing server port
+- `SMTP_USER`: Your mailing server username
+- `SMTP_PASS`: Your mailing server password
+- `REDIS_HOST`: Host of the redis instance to use. If using redis within the same `docker-compose.yml` can be set to `redis`
+- `REDIS_PORT`: Port that the redis instance is running on. The default port for redis instances is `6379`.
+- `REDIS_PASSWORD`: Password for the redis instance. If none, can be left empty.
+- `DASHBOARD_USERNAME`: Username to login to Bull dashboard
+- `DASHBOARD_PASSWORD`: Password to login to Bull dashboard
 
-To build and run the system, you only need one:
+### Templates
+You'll need to provide the templates that the application can access and use. To do so, you can change the `/path/to/your/templates/folder` to a folder that contains you templates.
 
-```
-docker compose up -d --build
-```
+These templates must be handlebars templates, they'll be selected on request time.
 
-    
-## Demonstration
+## Usage
+After everything is up and running, you might want to send emails.
 
-To use the email service after it has been configured, you can test it by accessing host:3000/admin/bull and inserting your credentials, if you have access to the queue everything is fine.
+The API has only one endpoint: `/send-email`.
+- Type: `POST`
+- Endpoint: `/send-email`
+- Body: `JSON`
 
-### Request for use
-
-Example:
-
-Make a POST Request to http://localhost:3000/send-email
+#### Body Example
 ```json
 {
-  "to":"mail@gmail.com",
-  "from":"mail@noreply.com.br",
-  "subject":"Test",
-  "context":{
-    "name":"Jarvan Five"
+  "from": "noreply@example.com", // Sender Email
+  "to": "john@example.com", // Recipient Email
+  "subject": "Test", // Email Subject
+  "context": {
+    "name": "Jarvan Five" // Variable defined in handlebars template
+    // These are dynamic, if your template uses it, it must, or can be passed through here.
   }
 }
 ```
