@@ -23,14 +23,14 @@ export class SendMailConsumer {
   async sendMailJob(job: Job<SendMailDTO>) {
     const { data } = job;
 
+    console.log(data);
+
     await this.mailService.sendMail({
       to: data.to,
       from: data.from,
       subject: data.subject,
-      template: '../../../templates/mail/main.hbs',
-      context: {
-        name: data.context.name,
-      },
+      template: `/templates/${data.template}`,
+      context: data.context,
     });
   }
 }

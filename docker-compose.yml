@@ -1,23 +1,23 @@
 version: '3.8'
 services:
-  cache:
-    image: redis:6.2-alpine
-    restart: always
-    ports:
-      - '6379:6379'
-    command: redis-server --save 20 1 --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-    volumes: 
-      - cache:/data
-  simple-mail:
+  app:
     build: .
-    restart: always
+    command: ["yarn", "start:dev"]
+    env_file: .env
+    depends_on:
+      - redis
     ports:
       - '3002:3000'
-    env_file: .env
     volumes:
-      - simple-mail:/data
+      - ./:/app
+      - ./templates:/templates
+      - /app/node_modules
+    
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis:/data
+
 volumes:
-  cache:
-    driver: local
-  simple-mail:
+  redis:
     driver: local

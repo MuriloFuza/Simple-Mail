@@ -17,3 +17,19 @@ FROM base AS builder
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
+COPY package.json .yarnrc.yml yarn.lock .env ./
+COPY ./src ./src
+
+RUN yarn build
+
+FROM base AS runner
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json .yarnrc.yml yarn.lock .env ./
+COPY --from=builder /app/dist ./app/dist
+COPY --from=builder /app/.env ./app/.env
+
+EXPOSE 3000
+
+CMD ["yarn", "start:prod"]

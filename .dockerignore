@@ -1,6 +1,7 @@
-node_modules
-npm-debug.log
-yarn-debug.log
-yarn-error.log
-pnpm-debug.log
-pnpm-error.log
+./node_modules
+./templates
+
+.env
+Dockerfile*
+docker-compose*
+*.log
