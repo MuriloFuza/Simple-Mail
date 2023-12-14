@@ -1,5 +1,26 @@
 FROM node:20-alpine AS base
 
+ARG SMTP_HOST
+ENV SMTP_HOST=${SMTP_HOST}
+ARG SMTP_PORT
+ENV SMTP_PORT=${SMTP_PORT}
+ARG SMTP_USER
+ENV SMTP_USER=${SMTP_USER}
+ARG SMTP_PASS
+ENV SMTP_PASS=${SMTP_PASS}
+
+ARG REDIS_HOST
+ENV REDIS_HOST=${REDIS_HOST}
+ARG REDIS_PORT
+ENV REDIS_PORT=${REDIS_PORT}
+ARG REDIS_PASSWORD
+ENV REDIS_PASSWORD=${REDIS_PASSWORD}
+
+ARG DASHBOARD_USERNAME
+ENV DASHBOARD_USERNAME=${DASHBOARD_USERNAME}
+ARG DASHBOARD_PASSWORD
+ENV DASHBOARD_PASSWORD=${DASHBOARD_PASSWORD}
+
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache procps libc6-compat
 RUN corepack enable && corepack prepare yarn@3.6.4 --activate
@@ -17,7 +38,7 @@ FROM base AS builder
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json .yarnrc.yml yarn.lock .env ./
+COPY package.json .yarnrc.yml yarn.lock ./
 COPY ./src ./src
 
 RUN yarn build
@@ -26,9 +47,8 @@ FROM base AS runner
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json .yarnrc.yml yarn.lock .env ./
+COPY package.json .yarnrc.yml yarn.lock ./
 COPY --from=builder /app/dist ./app/dist
-COPY --from=builder /app/.env ./app/.env
 
 EXPOSE 3000
 
