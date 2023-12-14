@@ -49,7 +49,7 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json .yarnrc.yml yarn.lock ./
-COPY --from=builder /app/dist ./app/dist
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
