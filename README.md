@@ -63,3 +63,5 @@ The API has only one endpoint: `/send-email`.
 }
 ```
 
+### Dashboard View
+There is a dashboard at `/dashboard`. The username and password should be the ones set at the `.env`
