@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 
 ARG SMTP_HOST
 ENV SMTP_HOST=${SMTP_HOST}
@@ -23,34 +23,33 @@ ENV DASHBOARD_PASSWORD=${DASHBOARD_PASSWORD}
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache procps libc6-compat
-RUN corepack enable && corepack prepare yarn@3.6.4 --activate
 
 # Install dependencies only when needed
 FROM base AS deps
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json .yarnrc.yml yarn.lock ./
-RUN yarn install
+COPY package*.json ./
+RUN npm i
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json .yarnrc.yml yarn.lock ./
+COPY package*.json ./
 COPY nest-cli.json tsconfig.build.json tsconfig.json ./
 COPY ./src ./src
 
-RUN yarn build
+RUN npm run build
 
 FROM base AS runner
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json .yarnrc.yml yarn.lock ./
+COPY package*.json ./
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
-CMD ["yarn", "start:prod"]
+CMD ["npm", "run", "start:prod"]

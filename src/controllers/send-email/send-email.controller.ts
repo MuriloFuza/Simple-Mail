@@ -1,13 +1,13 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { SendMailProducerService } from 'src/producers/mail/jobs/sendMail-producer-service';
-import { SendMailDTO } from './send-mail-dto';
+import { SendEmailBody } from './send-email.types';
+import { SendEmailService } from './send-email.service';
 
 @Controller('send-email')
 export class SendEmailController {
-  constructor(private mailService: SendMailProducerService) {}
+  constructor(private mailService: SendEmailService) {}
 
   @Post('/')
-  async sendMail(@Body() email: SendMailDTO) {
-    this.mailService.sendMail(email);
+  async sendMail(@Body() data: SendEmailBody) {
+    this.mailService.sendMail(data);
   }
 }

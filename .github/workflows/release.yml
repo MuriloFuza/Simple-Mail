@@ -10,26 +10,15 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
-
-      - name: Install Yarn
-        run: corepack enable |
-          corepack prepare yarn@3.6.4 --activate
-
-      # Yarn dependencies cannot be cached until yarn is installed
-      # WORKAROUND: https://github.com/actions/setup-node/issues/531
-      - name: Extract Cached Dependencies
-        uses: actions/setup-node@v3
-        with:
-          cache: yarn
+          node-version: 22
 
       - name: Install Dependencies
-        run: yarn --immutable
+        run: npm i
 
       - name: Set Git user to Actions Bot
         run: |
@@ -37,6 +26,6 @@ jobs:
           git config --local user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
       - name: Run Release
-        run: yarn release-it --ci
+        run: npm run release-it -- --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

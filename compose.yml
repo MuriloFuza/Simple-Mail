@@ -1,13 +1,13 @@
-version: '3.8'
 services:
   app:
     build: .
-    command: ["yarn", "start:dev"]
+    command: ["npm", "run", "start:dev"]
     env_file: .env
+    restart: always
     depends_on:
       - redis
     ports:
-      - '3002:3000'
+      - '3003:3000'
     volumes:
       - ./:/app
       - ./templates:/templates
