@@ -1,5 +1,7 @@
 
 
+## [0.0.9](https://github.com/MuriloFuza/Simple-Mail/compare/0.0.8...0.0.9) (2024-11-30)
+
 ## [0.0.8](https://github.com/MuriloFuza/Simple-Mail/compare/0.0.7...0.0.8) (2024-11-30)
 
 ## 0.0.7 (2024-11-30)
