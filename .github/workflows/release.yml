@@ -26,6 +26,6 @@ jobs:
           git config --local user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
       - name: Run Release
-        run: npm run release-it -- --ci
+        run: npx run release-it -- --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
