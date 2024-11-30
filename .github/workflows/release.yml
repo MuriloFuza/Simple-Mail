@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install Dependencies
         run: npm i
@@ -26,6 +27,6 @@ jobs:
           git config --local user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
       - name: Run Release
-        run: npm run release-it -- --ci
+        run: npx release-it --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
