@@ -3,11 +3,10 @@
 **Simple Mail** is a prebuilt application for mail sending, supporting multiple templates and variables.
 
 ## How to run
-We designed it to be user primarily with Docker, but it can, with some light code modification be ran bare.
+We designed it to be used primarily with Docker, but it can, with some light code modification be ran bare.
 
 To run with Docker Compose:
 ```yaml
-version: '3.8'
 services:
   mailer:
     image: murilofuza/simple-mail
@@ -37,7 +36,7 @@ Be sure that your `.env` file has the needed variables:
 - `DASHBOARD_PASSWORD`: Password to login to Bull dashboard
 
 ### Templates
-You'll need to provide the templates that the application can access and use. To do so, you can change the `/path/to/your/templates/folder` to a folder that contains you templates.
+You'll can provide the templates that the application can access and use. To do so, you can change the `/path/to/your/templates/folder` to a folder that contains you templates.
 
 These templates must be handlebars templates, they'll be selected on request time.
 
@@ -55,10 +54,14 @@ The API has only one endpoint: `/send-email`.
   "from": "noreply@example.com", // Sender Email
   "to": "john@example.com", // Recipient Email
   "subject": "Test", // Email Subject
-  "context": {
+  "html": "A big HTML string", // An HTML string can be used instead of a template and context.
+  "template": "main.hbs", // The template file selected. Relative to the template folder.
+  "context": { // Context can be 
     "name": "Jarvan Five" // Variable defined in handlebars template
     // These are dynamic, if your template uses it, it must, or can be passed through here.
   }
 }
 ```
 
+### Dashboard View
+There is a dashboard at `/dashboard`. The username and password should be the ones set at the `.env`

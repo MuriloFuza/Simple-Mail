@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 export class BasicAuthMiddleware implements NestMiddleware {
   private readonly username = process.env.DASHBOARD_USERNAME;
   private readonly password = process.env.DASHBOARD_PASSWORD;
+  
   private readonly encodedCredentials = Buffer.from(
     this.username + ':' + this.password,
   ).toString('base64');
